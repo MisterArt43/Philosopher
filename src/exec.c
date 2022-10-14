@@ -12,68 +12,63 @@
 
 #include "../incldues/header.h"
 
+void	time_to_sleep(t_philo *philo)
+{
+	printf("%d %d is slseeping", philo->start_time - get_time(), philo->id);
+	pass_time(philo->time_to_sleep);
+	printf("%d %d is thinking", philo->start_time - get_time(), philo->id);
+}
+
+void	time_to_eat(t_philo *philo)
+{
+	pthread_mutex_lock(philo->left_fork);
+	printf("%d %d has taken a fork", philo->start_time - get_time(), philo->id);
+	pthread_mutex_lock(philo->right_fork);
+	printf("%d %d has taken a fork", philo->start_time - get_time(), philo->id);
+	printf("%d %d is eating", philo->start_time - get_time(), philo->id);
+	pass_time(philo->time_to_eat);
+	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_unlock(philo->right_fork);
+}
+
+unsigned int	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec * 0.001));
+}
+
+void	pass_time(unsigned int duration)
+{
+	while ((get_time() - duration) != 0)
+		usleep(1);
+}
+
 void	manage_philo(void *idk, t_philo philo)
 {
-	if ()
-}
-
-void	think()
-{
-	
-}
-
-void	eat(int time, t_philo *philo)
-{
-	
-}
-
-t_philo	new_philo(int i, t_main *main)
-{
-	t_philo new;
-	int		j;
-
-	j = 0;
-	new.id = i + 1;
-	new.mortem = 0;
-	if (i == 0)
-		pthread_mutex_init(&new.left_fork, NULL);
-	else
-		new.left_fork = main->philo[i - 1].right_fork;
-	if (i != main->nb_philo)
-		pthread_mutex_init(&new.right_fork, NULL);
-	else
-		new.right_fork = main->philo[0].left_fork;
-	return (new);
-}
-
-int	make_philo(t_main *main)
-{
-	int	i;
-
-	main->philo = malloc(sizeof(t_philo) * (main->nb_philo + 1));
-	if (!main->philo)
-		return ;
-	i = 0;
-	while (i != main->nb_philo)
+	while (1)
 	{
-		main->philo[i] = new_philo(i, main);
-		i++;
+		if (philo.started == 0)
+		{
+			philo.start_time = get_time();
+			philo.started = 1;
+		}
+		if (philo.id % 2 == 1 && philo.id != philo.nb_philo + 1)
+		{
+			time_to_eat(&philo);
+			philo.fake_id++;
+			if (philo.fake_id == philo.nb_philo)
+				philo.fake_id = 1;
+			time_to_sleep(&philo);
+		}
+		else
+		{
+			printf("%d %d is thinking", philo.start_time - get_time(), philo.id);
+			pass_time(philo.time_to_eat);
+			philo.fake_id++;
+			if (philo.fake_id == philo.nb_philo)
+				philo.fake_id = 1;
+		}
 	}
-	i = 0;
-	while (i != main->nb_philo)
-	{
-		pthread_create(&main->philo[i].thread, NULL, &manage_philo, &main->philo[i]);
-		i++;
-	}
-	i = 0;
-	while (i != main->nb_philo)
-	{
-		pthread_join(main->philo[i].thread, NULL);
-		i++;
-	}
-}
-
-void	start_exec(t_main *main)
-{
-	make_philo(main);
 }
