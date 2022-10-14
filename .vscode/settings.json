@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"_pthread_types.h": "c",
+		"_pthread_mutex_t.h": "c",
+		"_pthread_mutexattr_t.h": "c"
+	}
+}
