@@ -54,6 +54,6 @@ typedef struct s_main
 int		check_args(char **argv);
 int		ft_atoi(const char *str);
 void	parsing(char **str, t_main *main);
-void	manage_philo(void *idk, t_philo philo);
+void	manage_philo(void *idk);
 
 #endif

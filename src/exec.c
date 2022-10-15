@@ -41,34 +41,41 @@ unsigned int	get_time(void)
 
 void	pass_time(unsigned int duration)
 {
-	while ((get_time() - duration) != 0)
-		usleep(1);
+	unsigned int	init;
+	unsigned int	i;
+
+	init = get_time() + duration;
+	while (get_time() < init)
+		usleep(10);
 }
 
-void	manage_philo(void *idk, t_philo philo)
+void	manage_philo(void *idk)
 {
+	t_philo	*philo;
+
+	philo = idk;
 	while (1)
 	{
-		if (philo.started == 0)
+		if (philo->started == 0)
 		{
-			philo.start_time = get_time();
-			philo.started = 1;
+			philo->start_time = get_time();
+			philo->started = 1;
 		}
-		if (philo.id % 2 == 1 && philo.id != philo.nb_philo + 1)
+		if (philo->id % 2 == 1 && philo->id != philo->nb_philo + 1)
 		{
 			time_to_eat(&philo);
-			philo.fake_id++;
-			if (philo.fake_id == philo.nb_philo)
-				philo.fake_id = 1;
+			philo->fake_id++;
+			if (philo->fake_id == philo->nb_philo)
+				philo->fake_id = 1;
 			time_to_sleep(&philo);
 		}
 		else
 		{
-			printf("%d %d is thinking", philo.start_time - get_time(), philo.id);
-			pass_time(philo.time_to_eat);
-			philo.fake_id++;
-			if (philo.fake_id == philo.nb_philo)
-				philo.fake_id = 1;
+			printf("%d %d is thinking", philo->start_time - get_time(), philo->id);
+			pass_time(philo->time_to_eat);
+			philo->fake_id++;
+			if (philo->fake_id == philo->nb_philo)
+				philo->fake_id = 1;
 		}
 	}
 }
