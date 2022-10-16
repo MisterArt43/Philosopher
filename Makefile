@@ -21,7 +21,7 @@ HEADER = includes/header.h
 NAME	=	philo
 
 CC		=	gcc
-FLAGS	= 	-Wall -Werror -Wextra
+FLAGS	= 	-Wall -Werror -Wextra# -g3
 OBJ = $(SRC:.c=.o)
 
 all : $(NAME)

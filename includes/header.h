@@ -31,6 +31,7 @@ typedef struct s_philo
 	int				time_to_eat;
 	int				time_to_die;
 	int				time_to_sleep;
+	int				has_thinked;
 	int				started;
 	int				id;
 	int				nb_philo;
@@ -61,5 +62,6 @@ void			start_exec(t_main *main);
 void			*manage_philo(void *idk);
 unsigned int	get_time(void);
 void			pass_time(unsigned int duration);
+void			print_mutex(t_philo *philo, char *msg, int first, int second);
 
 #endif

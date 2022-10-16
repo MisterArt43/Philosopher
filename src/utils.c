@@ -39,6 +39,8 @@ int	ft_atoi(const char *str)
 
 void	ft_putnbr_fd(int nb, int fd)
 {
+	char c;
+
 	if (fd >= 0)
 	{
 		if (nb < 0)
@@ -55,7 +57,8 @@ void	ft_putnbr_fd(int nb, int fd)
 		{
 			if (nb > 9)
 				ft_putnbr_fd(nb / 10, fd);
-			ft_putchar_fd(nb % 10 + '0', fd);
+			c = nb % 10 + '0';
+			write(fd, &c, 1);
 		}
 	}
 }
@@ -72,6 +75,7 @@ int	ft_strlen(char *str)
 {
 	int	i;
 
+	i = 0;
 	while (str[i])
 		i++;
 	return (i);
@@ -80,6 +84,9 @@ int	ft_strlen(char *str)
 void	print_mutex(t_philo *philo, char *msg, int first, int second)
 {
 	pthread_mutex_lock(philo->let_me_write);
+	ft_putnbr_fd(first, 1);
+	write(1, " ", 1);
+	ft_putnbr_fd(second, 1);
 	write(1, msg, ft_strlen(msg));
 	pthread_mutex_unlock(philo->let_me_write);
 }

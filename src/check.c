@@ -19,7 +19,6 @@ int	check_arg(char *arg)
 	i = 0;
 	while (arg[i])
 	{
-		printf("YES : %c\n", arg[i]);
 		if (!(arg[i] >= '0' && arg[i] <= '9'))
 			return (0);
 		i++;

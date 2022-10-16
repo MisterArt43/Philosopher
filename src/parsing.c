@@ -90,6 +90,7 @@ void	start_exec(t_main *main)
 	while (i != main->nb_philo)
 	{
 		pthread_create(&main->philo[i].thread, NULL, &manage_philo, &main->philo[i]);
+		usleep(2);
 		i++;
 	}
 	i = 0;

@@ -14,21 +14,21 @@
 
 void	time_to_sleep(t_philo *philo)
 {
-	printf("%d %d is slseeping\n", get_time() - philo->start_time, philo->id);
+	print_mutex(philo, " is sleeping\n", get_time() - philo->start_time, philo->id);
 	pass_time((unsigned int)philo->time_to_sleep);
-	printf("%d %d is thinking\n", get_time() - philo->start_time, philo->id);
 }
 
 void	time_to_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left_fork);
-	printf("%d %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+	print_mutex(philo, " has taken a fork\n", get_time() - philo->start_time, philo->id);
 	pthread_mutex_lock(philo->right_fork);
-	printf("%d %d has taken a fork\n", get_time() - philo->start_time, philo->id);
-	printf("%d %d is eating\n", get_time() - philo->start_time, philo->id);
+	print_mutex(philo, " has taken a fork\n", get_time() - philo->start_time, philo->id);
+	print_mutex(philo, " is eating\n", get_time() - philo->start_time, philo->id);
 	pass_time((unsigned int)philo->time_to_eat);
-	pthread_mutex_unlock(philo->left_fork);
+	philo->time_since_eat = get_time();
 	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(philo->left_fork);
 }
 
 void	pass_time(unsigned int duration)
@@ -37,7 +37,7 @@ void	pass_time(unsigned int duration)
 
 	init = get_time() + duration;
 	while (get_time() < init)
-		usleep(10);
+		usleep(1);
 }
 
 void	*manage_philo(void *idk)
@@ -45,28 +45,37 @@ void	*manage_philo(void *idk)
 	t_philo	*philo;
 
 	philo = idk;
+	philo->has_thinked = 0;
+	philo->start_time = get_time();
+	if (philo->fake_id == philo->nb_philo)
+		print_mutex(philo, " is thinking\n", get_time() - philo->start_time, philo->id);
+	//print_mutex(philo, " is thinking\n", get_time() - philo->start_time, philo->id);//debug start
 	while (1)
 	{
-		if (philo->started == 0)
-		{
-			philo->start_time = get_time();
-			philo->started = 1;
-		}
-		if (philo->id % 2 == 1 && philo->id != philo->nb_philo + 1)
+		if (philo->fake_id % 2 == 1 && philo->fake_id != philo->nb_philo)
 		{
 			time_to_eat(philo);
 			philo->fake_id++;
 			if (philo->fake_id == philo->nb_philo)
 				philo->fake_id = 1;
 			time_to_sleep(philo);
+			philo->has_thinked = 0;
 		}
-		else
+		else if (philo->has_thinked == 0 || philo->fake_id == philo->nb_philo)
 		{
-			printf("%d %d is thinking\n", get_time() - philo->start_time, philo->id);
-			pass_time(philo->time_to_eat);
+			philo->has_thinked = 1;
+			if (!(philo->fake_id == philo->nb_philo))
+			{
+				print_mutex(philo, " is thinking\n", get_time() - philo->start_time, philo->id);
+				pass_time(1);
+			}
 			philo->fake_id++;
-			if (philo->fake_id == philo->nb_philo)
+			if (philo->fake_id > philo->nb_philo)
+			{
+				//print_mutex(philo, "DEBUG LAST IS :\n", philo->fake_id, philo->id);
+				pass_time(philo->time_to_eat - 1);
 				philo->fake_id = 1;
+			}
 		}
 	}
 }
