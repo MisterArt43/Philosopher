@@ -18,13 +18,16 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <time.h>
+# include <stdlib.h>
 
 typedef struct s_philo
 {
 	pthread_t		thread;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*let_me_write;
 	unsigned int	start_time;
+	unsigned int	time_since_eat;
 	int				time_to_eat;
 	int				time_to_die;
 	int				time_to_sleep;
@@ -51,9 +54,12 @@ typedef struct s_main
  * @name check_args
  * @param {char **} argv
 **/
-int		check_args(char **argv);
-int		ft_atoi(const char *str);
-void	parsing(char **str, t_main *main);
-void	manage_philo(void *idk);
+int				check_args(char **argv);
+int				ft_atoi(const char *str);
+void			parsing(char **str, t_main *main);
+void			start_exec(t_main *main);
+void			*manage_philo(void *idk);
+unsigned int	get_time(void);
+void			pass_time(unsigned int duration);
 
 #endif

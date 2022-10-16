@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incldues/header.h"
+#include "../includes/header.h"
 
 int	check_arg(char *arg)
 {
@@ -19,7 +19,8 @@ int	check_arg(char *arg)
 	i = 0;
 	while (arg[i])
 	{
-		if (arg[i] >= '0' && arg[i] <= '9')
+		printf("YES : %c\n", arg[i]);
+		if (!(arg[i] >= '0' && arg[i] <= '9'))
 			return (0);
 		i++;
 	}
@@ -30,7 +31,7 @@ int	check_args(char **argv)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	while (argv[i])
 	{
 		if (!check_arg(argv[i]))
