@@ -37,32 +37,6 @@ int	ft_atoi(const char *str)
 	return (res * neg);
 }
 
-void	ft_putnbr_fd(int nb, int fd)
-{
-	char c;
-
-	if (fd >= 0)
-	{
-		if (nb < 0)
-		{
-			if (nb == -2147483648)
-				write(fd, "-2147483648", 11);
-			else
-			{
-				write(fd, "-", 1);
-				ft_putnbr_fd(nb * -1, fd);
-			}
-		}
-		else
-		{
-			if (nb > 9)
-				ft_putnbr_fd(nb / 10, fd);
-			c = nb % 10 + '0';
-			write(fd, &c, 1);
-		}
-	}
-}
-
 unsigned int	get_time(void)
 {
 	struct timeval	tv;
@@ -71,22 +45,18 @@ unsigned int	get_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec * 0.001));
 }
 
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-void	print_mutex(t_philo *philo, char *msg, int first, int second)
+void	print_mutex(t_philo *philo, unsigned int first, int type)
 {
 	pthread_mutex_lock(philo->let_me_write);
-	ft_putnbr_fd(first, 1);
-	write(1, " ", 1);
-	ft_putnbr_fd(second, 1);
-	write(1, msg, ft_strlen(msg));
+	if (type == 0)
+		printf("%d %d has taken a fork\n%d %d has taken a fork\n", first, philo->id, first, philo->id);
+	else if (type == 1)
+		printf("%d %d is eating\n", first, philo->id);
+	else if (type == 2)
+		printf("%d %d is sleeping\n", first, philo->id);
+	else if (type == 3)
+		printf("%d %d is thinking\n", first, philo->id);
+	else if (type == 4)
+		printf("%d %d is dead\n", first, philo->id);
 	pthread_mutex_unlock(philo->let_me_write);
 }

@@ -12,25 +12,19 @@
 
 #include "../includes/header.h"
 
-void	init_main(t_main *new_main)
-{
-	new_main->nb_philo = -1;
-	new_main->t_die = -1;
-	new_main->t_eat = -1;
-	new_main->t_sleep = -1;
-	new_main->nb_eat = -1;
-}
-
 int	main(int argc, char **argv)
 {
 	t_main v_main;
 
-	init_main(&v_main);
-	if (argc > 3 && argc < 6)
+	if (argc > 4 && argc < 7)
 	{
 		if (check_args(argv))
 		{
 			parsing(argv, &v_main);
+			if (take_a_pen(&v_main) == 0)
+			{
+				//er
+			}
 			start_exec(&v_main);
 			return (0);
 		}
@@ -40,3 +34,4 @@ int	main(int argc, char **argv)
 	"./philo <nb_philo> <time_to_eat> <time_to_sleep> ", \
 	"<time_to_die> [nb_of_eat]\n");
 }
+//todo verif si > a 0
