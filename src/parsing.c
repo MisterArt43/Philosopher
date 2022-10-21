@@ -6,39 +6,11 @@
 /*   By: abucia <abucia@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 04:42:52 by abucia            #+#    #+#             */
-/*   Updated: 2022/10/13 04:47:50 by abucia           ###   ########lyon.fr   */
+/*   Updated: 2022/10/21 06:15:54 by abucia           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/header.h"
-
-void	start_exec(t_main *main)
-{
-	int	i;
-
-	i = 0;
-	while (i != main->nb_philo)
-	{
-		pthread_create(&main->philo[i].thread, NULL, &start_thread, &main->philo[i]);
-		i++;
-	}
-	usleep(main->time_to_eat);
-	i = 0;
-	while (i != main->nb_philo)
-	{
-		pthread_join(main->philo[i].thread, NULL);
-		i++;
-	}
-	i = 0;
-	while (i != main->nb_philo)
-	{
-		pthread_mutex_destroy(&main->fork[i]);
-		i++;
-	}
-	pthread_mutex_destroy(&main->are_you_dead);
-	pthread_mutex_destroy(&main->let_me_write);
-	free(main->philo);
-}
 
 int	mutex_birth(t_main *main)
 {
@@ -97,9 +69,8 @@ int	init_student(t_main *data)
 	if (give_them_book(data))
 		return (1);
 	init_time = get_time();
-	while (i >= 0)
+	while (--i >= 0)
 	{
-		i--;
 		data->philo[i].id = i + 1;
 		data->philo[i].time_to_die = data->time_to_die;
 		data->philo[i].time_to_eat = data->time_to_eat;
@@ -107,8 +78,7 @@ int	init_student(t_main *data)
 		data->philo[i].nb_eat = data->nb_eat;
 		data->philo[i].nb_philo = data->nb_philo;
 		data->philo[i].start_time = init_time;
-		data->philo[i].time_since_eat = data->philo[i].start_time;
-		//dead stuff init here
+		data->philo[i].time_since_eat = init_time;
 	}
 	return (0);
 }
@@ -123,7 +93,8 @@ int	parsing(char **str, t_main *main)
 		main->nb_eat = ft_atoi(str[5]);
 	else
 		main->nb_eat = -1;
-	//main->everyone_ate = 0;
-	//main->are_you_dead
+	if (main->nb_philo == 0 || main->time_to_die == 0 || \
+	main->time_to_eat == 0 || main->time_to_sleep == 0)
+		return (1);
 	return (init_student(main));
 }

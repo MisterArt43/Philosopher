@@ -6,7 +6,7 @@
 /*   By: abucia <abucia@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 04:36:53 by abucia            #+#    #+#             */
-/*   Updated: 2022/10/13 04:39:10 by abucia           ###   ########lyon.fr   */
+/*   Updated: 2022/10/21 06:16:01 by abucia           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	ft_atoi(const char *str)
 {
-	int i;
-	int neg;
-	int res;
+	int	i;
+	int	neg;
+	int	res;
 
 	neg = 1;
 	i = 0;
@@ -45,18 +45,23 @@ unsigned int	get_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec * 0.001));
 }
 
-void	print_mutex(t_philo *philo, unsigned int first, int type)
+void	start_exec(t_main *main)
 {
-	pthread_mutex_lock(philo->let_me_write);
-	if (type == 0)
-		printf("%d %d has taken a fork\n%d %d has taken a fork\n", first, philo->id, first, philo->id);
-	else if (type == 1)
-		printf("%d %d is eating\n", first, philo->id);
-	else if (type == 2)
-		printf("%d %d is sleeping\n", first, philo->id);
-	else if (type == 3)
-		printf("%d %d is thinking\n", first, philo->id);
-	else if (type == 4)
-		printf("%d %d is dead\n", first, philo->id);
-	pthread_mutex_unlock(philo->let_me_write);
+	int	i;
+
+	i = -1;
+	while (++i != main->nb_philo)
+		pthread_create(&main->philo[i].thread, \
+		NULL, &start_thread, &main->philo[i]);
+	usleep(main->time_to_eat);
+	i = -1;
+	while (++i != main->nb_philo)
+		pthread_join(main->philo[i].thread, NULL);
+	i = -1;
+	while (++i != main->nb_philo)
+		pthread_mutex_destroy(&main->fork[i]);
+	pthread_mutex_destroy(&main->are_you_dead);
+	pthread_mutex_destroy(&main->let_me_write);
+	free(main->philo);
+	free(main->fork);
 }

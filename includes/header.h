@@ -6,7 +6,7 @@
 /*   By: abucia <abucia@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 03:28:18 by abucia            #+#    #+#             */
-/*   Updated: 2022/10/14 01:32:56 by abucia           ###   ########lyon.fr   */
+/*   Updated: 2022/10/21 06:02:37 by abucia           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,6 @@
 # include <sys/time.h>
 # include <time.h>
 # include <stdlib.h>
-
-# ifdef __linux__ 
-	#define LOCK_DATA __data.__lock
-# else
-	#define LOCK_DATA __opaque[24]
-# endif
 
 typedef struct s_philo
 {
@@ -74,10 +68,12 @@ int				ft_atoi(const char *str);
 int				parsing(char **str, t_main *main);
 int				take_a_pen(t_main *data);
 void			start_exec(t_main *main);
+//-------------------------------------------------//
 void			manage_philo(t_philo *philo);
 void			*start_thread(void *undefined);
 unsigned int	get_time(void);
-void			pass_time(unsigned int duration);
+int				check_dead(t_philo *philo);
+int				pass_time(unsigned int duration, t_philo *philo, int type);
 void			print_mutex(t_philo *philo, unsigned int first, int type);
 
 #endif
